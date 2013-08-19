@@ -1,12 +1,15 @@
+require 'digest/md5'
+require 'io/console'
 class Encryptor
+
   def initialize
-  last_rotation = 0
-  @last_rotation = last_rotation
+    last_rotation = 0
+    @last_rotation = last_rotation
   end
 
   def run
     puts "Welcome to Encryptor"
-
+    authenticate_user
     command = ""
     while command != "quit"
       puts ""
@@ -15,7 +18,8 @@ class Encryptor
       parts = input.split
       command = parts[0]
       case command
-        when "quit" then puts "Goodbye! Encryptor is shutting down."
+        when "quit"
+          puts "Goodbye! Encryptor is shutting down."
         when "e"
           @last_rotation = rand(91)
           puts encrypt(parts[1..-1].join(" "), @last_rotation)
@@ -25,7 +29,7 @@ class Encryptor
           puts decrypt(parts[1..-1].join(" "), @last_rotation)
         when "dr"
           puts decrypt(parts[2..-1].join(" "), parts[1].to_i)
-        when "help" then
+        when "help"
           puts "
           // quit - exits the program
           // e (message) - encrypts a message using a randomly generated encryption rotation.
@@ -34,9 +38,22 @@ class Encryptor
           // dr (message, rotation) - decrypts a message using the specified rotation number."
         else
           puts "Unknown command, please try again."
-        end
       end
     end
+  end
+
+  def authenticate_user
+    puts "Please enter the secret password: "
+    pwd_try = STDIN.noecho(&:gets)
+    pwd_try_encrypted = encrypt(pwd_try, 12)
+    pkey = "%t&zpq#om%$"
+    pkey_md5 = Digest::MD5.hexdigest(pkey)
+    pwd_try_md5 = Digest::MD5.hexdigest(pwd_try_encrypted)
+    if pwd_try_md5 != pkey_md5
+      puts "You have entered an incorrect password. Aborting."
+      fail
+    end
+  end
 
   def cipher(rotation)
     characters = (' '..'z').to_a
@@ -95,6 +112,7 @@ class Encryptor
       decrypt(message,attempt)
     end
   end
+
 end
 
 encryptor = Encryptor.new
