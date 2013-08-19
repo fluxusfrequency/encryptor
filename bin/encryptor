@@ -1,0 +1,4 @@
+require '../lib/encryptor/runtime.rb'
+
+encryptor = Encryptor::Runtime.new
+encryptor.run
