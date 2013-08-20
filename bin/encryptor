@@ -1,4 +1,7 @@
-require '../lib/encryptor/runtime.rb'
+#! /usr/bin/env ruby
+$:.unshift("lib")
+
+require 'encryptor/runtime.rb'
 
 encryptor = Encryptor::Runtime.new
 encryptor.run
