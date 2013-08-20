@@ -18,7 +18,7 @@ module Encryptor
       end
     end
 
-    def decrypt(string, rotation1 = @last_rotation1, rotation2 = @last_rotation2, rotation3 = @last_rotation3)
+    def decrypt(string, rotation1, rotation2, rotation3)
       begin
         letters = string.split("")
         results = letters.collect do |letter|
